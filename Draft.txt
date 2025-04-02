@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng Chẩn đoán Ung thư Da</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Sử dụng font Inter */
+            overscroll-behavior: none; /* Ngăn chặn scroll bounce trên mobile */
+        }
+        /* Style cơ bản cho các tab */
+        .tab-content {
+            display: none; /* Mặc định ẩn tất cả nội dung tab */
+        }
+        .tab-content.active {
+            display: block; /* Hiển thị nội dung tab đang active */
+        }
+        /* Tăng kích thước chữ và icon cho dễ đọc */
+        .text-lg-custom {
+            font-size: 1.125rem; /* 18px */
+            line-height: 1.75rem; /* 28px */
+        }
+        .text-xl-custom {
+            font-size: 1.25rem; /* 20px */
+            line-height: 1.75rem; /* 28px */
+        }
+        .icon-size-nav {
+             width: 28px;
+             height: 28px;
+        }
+        .icon-size-large {
+            width: 36px;
+            height: 36px;
+        }
+        /* Bo tròn góc */
+        .rounded-corner {
+            border-radius: 0.75rem; /* 12px */
+        }
+        .rounded-corner-large {
+            border-radius: 1rem; /* 16px */
+        }
+        /* Hiệu ứng hover/focus rõ ràng */
+        .nav-button:hover, .nav-button.active {
+            background-color: #e0f2fe; /* Light blue background on hover/active */
+            color: #0284c7; /* Darker blue text */
+        }
+        .nav-button {
+             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+         /* Style cho nút bấm rõ ràng hơn */
+        .action-button {
+            @apply bg-blue-600 text-white font-semibold py-3 px-6 rounded-corner shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out text-lg-custom;
+        }
+        /* Style cho thẻ thông tin */
+        .info-card {
+            @apply bg-white p-4 rounded-corner shadow mb-4 border border-gray-200;
+        }
+        .info-card-header {
+            @apply flex items-center mb-2 text-lg-custom font-semibold text-gray-700;
+        }
+        .info-card-icon {
+            @apply w-6 h-6 mr-2 text-blue-600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div id="app-container" class="max-w-md mx-auto bg-white shadow-lg rounded-corner-large overflow-hidden h-screen flex flex-col">
+
+        <header class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 shadow-md flex items-center justify-between">
+            <h1 class="text-xl-custom font-bold">Chăm Sóc Da</h1>
+            <div>
+                <button class="p-1 rounded-full hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white">
+                    <i data-lucide="settings" class="w-6 h-6"></i>
+                </button>
+                <button class="ml-2 p-1 rounded-full hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-grow p-4 overflow-y-auto pb-20">
+            <div id="tab-home" class="tab-content active">
+                <h2 class="text-xl-custom font-semibold mb-4 text-gray-800">Tổng quan</h2>
+
+                <div class="info-card bg-yellow-100 border-yellow-300">
+                    <div class="info-card-header text-yellow-800">
+                        <i data-lucide="sun" class="info-card-icon text-yellow-600"></i>
+                        Chỉ số UV hiện tại (Hà Nội)
+                    </div>
+                    <p class="text-3xl font-bold text-yellow-700">7 <span class="text-lg font-normal">(Cao)</span></p>
+                    <p class="text-sm text-yellow-600 mt-1">Nên sử dụng kem chống nắng và hạn chế ra ngoài vào buổi trưa.</p>
+                </div>
+
+                <div class="info-card bg-purple-100 border-purple-300">
+                    <div class="info-card-header text-purple-800">
+                        <i data-lucide="calendar-clock" class="info-card-icon text-purple-600"></i>
+                        Nhắc nhở sắp tới
+                    </div>
+                    <p class="text-lg-custom text-purple-700">Tái khám da liễu: <span class="font-medium">Thứ Sáu, 11/04/2025</span></p>
+                    <button class="mt-2 text-sm text-blue-600 hover:underline">Xem tất cả nhắc nhở</button>
+                </div>
+
+                 <div class="info-card">
+                    <div class="info-card-header">
+                        <i data-lucide="file-text" class="info-card-icon"></i>
+                        Kết quả chẩn đoán mới nhất
+                    </div>
+                    <p class="text-lg-custom text-gray-700">Ngày 28/03/2025: <span class="font-medium text-green-600">Nguy cơ thấp</span></p>
+                     <p class="text-sm text-gray-500 mt-1">Nốt ruồi ở cánh tay trái.</p>
+                    <button class="mt-2 text-sm text-blue-600 hover:underline">Xem chi tiết</button>
+                </div>
+
+                <button class="action-button w-full mt-4 flex items-center justify-center">
+                    <i data-lucide="camera" class="w-6 h-6 mr-2"></i>
+                    Bắt đầu Quét Ảnh Mới
+                </button>
+            </div>
+
+            <div id="tab-map" class="tab-content">
+                <h2 class="text-xl-custom font-semibold mb-4 text-gray-800">Bản đồ Cơ thể & Theo dõi</h2>
+                <div class="info-card">
+                    <p class="text-gray-600 mb-4 text-lg-custom">Chạm vào các điểm trên cơ thể để xem lịch sử quét hoặc thêm điểm mới.</p>
+                    <div class="bg-gray-200 h-64 rounded-corner flex items-center justify-center text-gray-500 mb-4">
+                        [Hình ảnh mô phỏng cơ thể người với các điểm đánh dấu]
+                    </div>
+                    <h3 class="text-lg-custom font-medium mb-2 text-gray-700">Lịch sử thay đổi gần đây</h3>
+                    <ul>
+                        <li class="mb-2 border-b pb-2">
+                            <p class="text-gray-800"><span class="font-medium">Cánh tay trái (Nốt ruồi A):</span> Thay đổi nhẹ về màu sắc.</p>
+                            <p class="text-sm text-gray-500">So sánh 28/03/2025 và 15/01/2025</p>
+                            <button class="text-sm text-blue-600 hover:underline mt-1">Xem so sánh chi tiết</button>
+                        </li>
+                        <li class="mb-2 border-b pb-2">
+                            <p class="text-gray-800"><span class="font-medium">Vùng Lưng (Điểm B):</span> Kích thước ổn định.</p>
+                             <p class="text-sm text-gray-500">So sánh 28/03/2025 và 15/01/2025</p>
+                             <button class="text-sm text-blue-600 hover:underline mt-1">Xem so sánh chi tiết</button>
+                        </li>
+                    </ul>
+                     <button class="action-button w-full mt-4">
+                        Thêm Điểm Quét Mới
+                    </button>
+                </div>
+            </div>
+
+            <div id="tab-analysis" class="tab-content">
+                <h2 class="text-xl-custom font-semibold mb-4 text-gray-800">Phân tích & Bệnh sử</h2>
+
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <i data-lucide="shield-check" class="info-card-icon"></i>
+                        Đánh giá nguy cơ cá nhân
+                    </div>
+                     <p class="text-lg-custom text-gray-700 mb-3">Dựa trên thông tin bạn cung cấp, đây là các yếu tố nguy cơ chính:</p>
+                     <div class="space-y-2 text-lg-custom">
+                         <div class="flex items-center">
+                             <i data-lucide="users" class="w-5 h-5 mr-2 text-red-500"></i>
+                             <span class="text-gray-800">Tiền sử gia đình: <span class="font-medium text-red-600">Có</span> (Mẹ)</span>
+                         </div>
+                         <div class="flex items-center">
+                             <i data-lucide="sun" class="w-5 h-5 mr-2 text-orange-500"></i>
+                             <span class="text-gray-800">Tiếp xúc ánh nắng: <span class="font-medium text-orange-600">Cao</span> (Làm việc ngoài trời)</span>
+                         </div>
+                         <div class="flex items-center">
+                             <i data-lucide="droplet" class="w-5 h-5 mr-2 text-blue-500"></i>
+                              <span class="text-gray-800">Loại da (Fitzpatrick): <span class="font-medium text-blue-600">Loại II</span> (Da sáng, dễ bỏng nắng)</span>
+                         </div>
+                     </div>
+                     <button class="action-button w-full mt-4">
+                        Cập nhật thông tin cá nhân
+                    </button>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <i data-lucide="history" class="info-card-icon"></i>
+                        Lịch sử chẩn đoán
+                    </div>
+                    <ul>
+                        <li class="mb-2 border-b pb-2">
+                            <p class="text-gray-800"><span class="font-medium">28/03/2025:</span> Nguy cơ thấp (Cánh tay trái)</p>
+                            <button class="text-sm text-blue-600 hover:underline mt-1">Xem chi tiết</button>
+                        </li>
+                         <li class="mb-2 border-b pb-2">
+                            <p class="text-gray-800"><span class="font-medium">15/01/2025:</span> Cần theo dõi (Vùng lưng)</p>
+                             <button class="text-sm text-blue-600 hover:underline mt-1">Xem chi tiết</button>
+                        </li>
+                         <li class="mb-2 pb-2">
+                            <p class="text-gray-800"><span class="font-medium">10/11/2024:</span> Bình thường (Cổ)</p>
+                            <button class="text-sm text-blue-600 hover:underline mt-1">Xem chi tiết</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+             <div id="tab-connect" class="tab-content">
+                <h2 class="text-xl-custom font-semibold mb-4 text-gray-800">Kết nối & Cộng đồng</h2>
+
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <i data-lucide="stethoscope" class="info-card-icon"></i>
+                        Kết nối Bác sĩ Da liễu
+                    </div>
+                    <p class="text-lg-custom text-gray-600 mb-3">Tìm kiếm và liên hệ với các bác sĩ chuyên khoa gần bạn hoặc tư vấn trực tuyến.</p>
+                     <button class="action-button w-full mb-3">
+                        Tìm Bác sĩ
+                    </button>
+                     <button class="action-button bg-green-600 hover:bg-green-700 focus:ring-green-500 w-full">
+                        Bắt đầu Tư vấn Trực tuyến
+                    </button>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <i data-lucide="users-round" class="info-card-icon"></i>
+                        Cộng đồng & Kiến thức
+                    </div>
+                    <p class="text-lg-custom text-gray-600 mb-3">Tham gia thảo luận, chia sẻ kinh nghiệm và đọc các bài viết hữu ích về sức khỏe làn da.</p>
+                    <div class="space-y-3">
+                        <a href="#" class="block p-3 bg-gray-50 rounded-corner hover:bg-gray-100 border border-gray-200">
+                            <h4 class="font-medium text-blue-700">Cách nhận biết sớm dấu hiệu ung thư da</h4>
+                            <p class="text-sm text-gray-600">Bài viết bởi BS. Nguyễn Văn A</p>
+                        </a>
+                         <a href="#" class="block p-3 bg-gray-50 rounded-corner hover:bg-gray-100 border border-gray-200">
+                            <h4 class="font-medium text-blue-700">Tầm quan trọng của việc sử dụng kem chống nắng</h4>
+                            <p class="text-sm text-gray-600">Chia sẻ từ cộng đồng</p>
+                        </a>
+                    </div>
+                     <button class="action-button w-full mt-4">
+                        Truy cập diễn đàn cộng đồng
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 max-w-md mx-auto">
+            <div class="flex justify-around items-center h-16">
+                <button class="nav-button flex flex-col items-center text-gray-600 hover:text-blue-600 p-2 rounded-corner active" data-tab="home">
+                    <i data-lucide="home" class="icon-size-nav mb-1"></i>
+                    <span class="text-xs font-medium">Tổng quan</span>
+                </button>
+                <button class="nav-button flex flex-col items-center text-gray-600 hover:text-blue-600 p-2 rounded-corner" data-tab="map">
+                    <i data-lucide="map-pin" class="icon-size-nav mb-1"></i>
+                    <span class="text-xs font-medium">Bản đồ</span>
+                </button>
+                <button class="nav-button flex flex-col items-center text-gray-600 hover:text-blue-600 p-2 rounded-corner" data-tab="analysis">
+                    <i data-lucide="clipboard-list" class="icon-size-nav mb-1"></i>
+                    <span class="text-xs font-medium">Phân tích</span>
+                </button>
+                 <button class="nav-button flex flex-col items-center text-gray-600 hover:text-blue-600 p-2 rounded-corner" data-tab="connect">
+                    <i data-lucide="link" class="icon-size-nav mb-1"></i>
+                    <span class="text-xs font-medium">Kết nối</span>
+                </button>
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        // Khởi tạo Lucide Icons
+        lucide.createIcons();
+
+        // Xử lý chuyển tab
+        const navButtons = document.querySelectorAll('.nav-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const appContainer = document.getElementById('app-container'); // Lấy container chính
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+
+                // Bỏ active khỏi tất cả button và content
+                navButtons.forEach(btn => btn.classList.remove('active', 'bg-blue-100', 'text-blue-700'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Thêm active cho button và content được click
+                button.classList.add('active', 'bg-blue-100', 'text-blue-700');
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+
+                 // Cuộn lên đầu trang khi chuyển tab
+                 const mainContentArea = appContainer.querySelector('main');
+                 if (mainContentArea) {
+                    mainContentArea.scrollTop = 0;
+                 }
+            });
+        });
+
+         // Đảm bảo tab đầu tiên được active khi tải trang
+         document.addEventListener('DOMContentLoaded', () => {
+            const initialActiveButton = document.querySelector('.nav-button[data-tab="home"]');
+             const initialActiveTab = document.getElementById('tab-home');
+             if (initialActiveButton && initialActiveTab) {
+                 initialActiveButton.classList.add('active', 'bg-blue-100', 'text-blue-700');
+                 initialActiveTab.classList.add('active');
+             }
+         });
+
+    </script>
+</body>
+</html>

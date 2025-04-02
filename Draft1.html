@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DermaScan - Chăm sóc da Hiện đại</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      @font-face {
+        font-family: 'LucideIcons';
+        /* Sử dụng CDN ổn định hơn */
+        src: url(https://cdn.jsdelivr.net/npm/lucide-static@latest/font/Lucide.ttf) format('truetype');
+      }
+      .lucide {
+        font-family: 'LucideIcons';
+        font-size: 1.4rem; /* Kích thước icon chuẩn */
+        line-height: 1;
+        display: inline-block;
+        font-feature-settings: 'liga' 1;
+        font-variant-ligatures: common-ligatures;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        font-style: normal;
+        font-weight: normal !important;
+      }
+      /* Biến màu CSS cho Light/Dark Mode */
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc; /* slate-50 */
+        --bg-card: #ffffff;
+        --bg-nav: rgba(255, 255, 255, 0.7); /* Nền kính */
+        --text-primary: #1e293b; /* slate-800 */
+        --text-secondary: #64748b; /* slate-500 */
+        --text-nav: #475569; /* slate-600 */
+        --text-nav-active: #2563eb; /* blue-600 */
+        --border-color: #e2e8f0; /* slate-200 */
+        --accent-blue: #3b82f6;
+        --accent-blue-dark: #2563eb;
+        --shadow-color: rgba(99, 102, 241, 0.1);
+        --shadow-light: rgba(0, 0, 0, 0.05);
+      }
+      /* Dark Mode (Ví dụ) */
+      /*
+      .dark {
+        --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-card: #1e293b;
+        --bg-nav: rgba(30, 41, 59, 0.7); --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8; --text-nav: #94a3b8; --text-nav-active: #60a5fa; // blue-400
+        --border-color: #334155; --shadow-color: rgba(0, 0, 0, 0.2);
+        --shadow-light: rgba(0, 0, 0, 0.1);
+      }
+      */
+      html, body { height: 100%; overflow: hidden; } /* Ngăn scroll toàn trang */
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Đảm bảo body chiếm toàn bộ chiều cao */
+      }
+      #app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-width: 480px; /* Giới hạn chiều rộng cho giống mobile */
+        margin: 0 auto; /* Căn giữa */
+        background-color: var(--bg-primary);
+        box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        overflow: hidden; /* Ngăn scroll ở container */
+      }
+      /* Header */
+      .app-header {
+        background-color: var(--bg-nav);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border-bottom: 1px solid var(--border-color);
+        flex-shrink: 0; /* Không co lại */
+        z-index: 20;
+      }
+      /* Main Content Area */
+      .app-main {
+        flex-grow: 1; /* Chiếm không gian còn lại */
+        overflow-y: auto; /* Cho phép scroll nội dung */
+        -webkit-overflow-scrolling: touch; /* Scroll mượt trên iOS */
+        padding: 1rem 1rem 6rem 1rem; /* Padding và khoảng trống cho nav bar */
+        background-color: var(--bg-secondary);
+      }
+      /* Tab Content */
+      .tab-content { display: none; }
+      .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+      /* Navigation Bar */
+      .app-nav {
+        background-color: var(--bg-nav);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border-top: 1px solid var(--border-color);
+        flex-shrink: 0; /* Không co lại */
+        position: absolute; /* Để đè lên nội dung scroll */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 480px;
+        margin: 0 auto;
+        z-index: 20;
+      }
+      .nav-button {
+        color: var(--text-nav);
+        transition: color 0.2s ease, background-color 0.2s ease;
+        flex: 1; /* Chia đều không gian */
+        padding: 0.5rem 0;
+      }
+      .nav-button.active { color: var(--text-nav-active); font-weight: 600; }
+      .nav-button:hover:not(.active) { color: var(--text-primary); }
+      .nav-scan-button {
+        margin-top: -2rem; /* Nâng nút scan lên */
+        box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.5);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .nav-scan-button:hover { transform: scale(1.05); box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.6); }
+
+      /* Component Styles (Tái sử dụng từ v3) */
+      .modern-primary-button {
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%);
+        color: white; padding: 0.8rem 1.5rem; border-radius: 0.75rem; font-weight: 600;
+        text-align: center; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 15px 0 var(--shadow-color); border: none; display: flex;
+        align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem;
+      }
+      .modern-primary-button:hover {
+        transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 20px 0 var(--shadow-color);
+      }
+      .modern-secondary-button {
+        background-color: transparent; color: var(--accent-blue); padding: 0.6rem 1.2rem;
+        border-radius: 0.5rem; font-weight: 600; text-align: center;
+        transition: background-color 0.2s ease, color 0.2s ease; border: 1px solid var(--accent-blue);
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.3rem;
+      }
+      .modern-secondary-button:hover { background-color: rgba(59, 130, 246, 0.1); }
+      .minimal-card {
+        background-color: var(--bg-card); border-radius: 1rem; padding: 1.25rem;
+        box-shadow: 0 4px 20px 0 var(--shadow-light); border: 1px solid var(--border-color);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        margin-bottom: 1.25rem; /* Khoảng cách giữa các card */
+      }
+      .minimal-card:hover { transform: translateY(-3px); box-shadow: 0 6px 25px 0 var(--shadow-light); }
+      .card-header { display: flex; align-items: center; margin-bottom: 0.75rem; font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+      .card-icon { width: 1.25rem; height: 1.25rem; margin-right: 0.6rem; color: var(--accent-blue); } /* Icon nhỏ hơn trong card */
+
+       /* Placeholder cho bản đồ */
+      .body-map-placeholder {
+          width: 100%;
+          height: 300px; /* Giảm chiều cao */
+          background-color: #eef2ff; /* indigo-50 */
+          border-radius: 0.75rem;
+          margin: 1rem auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #c7d2fe; /* indigo-200 */
+          color: #4338ca; /* indigo-700 */
+          font-weight: 500;
+      }
+       /* Style cho danh sách */
+       .list-item { border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
+       .list-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+
+        <header class="app-header p-4 flex items-center justify-between">
+             <button id="back-button" class="p-2 -ml-2 text-slate-600 hover:text-blue-600 invisible">
+                 <span class="lucide text-2xl">&#xe90a;</span> </button>
+            <h1 id="page-title" class="text-lg font-semibold text-slate-800 absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                Tổng quan
+            </h1>
+            <div class="flex items-center space-x-1">
+                <button id="header-action-button" class="p-2 rounded-full hover:bg-slate-200/60 transition-colors">
+                    <span class="lucide text-slate-600">&#xef13;</span> </button>
+                 <button class="p-2 rounded-full hover:bg-slate-200/60 transition-colors relative">
+                    <span class="lucide text-slate-600">&#xe918;</span> <span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-1 ring-white"></span>
+                </button>
+            </div>
+        </header>
+
+        <main class="app-main space-y-6">
+
+            <div id="tab-home" class="tab-content active">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Chào mừng trở lại!</h2>
+
+                <div class="minimal-card bg-gradient-to-br from-yellow-50 to-amber-100 border-amber-200">
+                    <div class="card-header">
+                        <span class="lucide card-icon text-yellow-600">&#xf073;</span> Chỉ số UV (Hà Nội)
+                    </div>
+                    <p class="text-4xl font-bold text-yellow-700 mb-1">7 <span class="text-xl font-medium">(Cao)</span></p>
+                    <p class="text-sm text-yellow-600">Hạn chế ra ngoài lúc nắng gắt, sử dụng biện pháp che chắn.</p>
+                </div>
+
+                <div class="minimal-card">
+                    <div class="card-header">
+                        <span class="lucide card-icon text-purple-600">&#xe91a;</span> Nhắc nhở sắp tới
+                    </div>
+                    <p class="text-base text-slate-700 mb-2">Tái khám da liễu: <span class="font-semibold text-purple-700">Thứ Sáu, 11/04/2025</span></p>
+                    <a href="#" class="modern-secondary-button text-sm" data-target-tab="reminders"> <span class="lucide text-xs">&#xe91e;</span> Xem tất cả
+                    </a>
+                </div>
+
+                <div class="minimal-card">
+                    <div class="card-header">
+                         <span class="lucide card-icon text-green-600">&#xe95c;</span> Kết quả gần nhất (02/04/25)
+                    </div>
+                    <p class="text-base text-slate-700 mb-1">Nốt ruồi cánh tay trái: <span class="font-semibold text-green-700">Nguy cơ thấp</span></p>
+                     <a href="#" class="modern-secondary-button text-sm">
+                         <span class="lucide text-xs">&#xef1f;</span> Xem chi tiết
+                    </a>
+                </div>
+            </div>
+
+            <div id="tab-map" class="tab-content">
+                <h2 class="text-xl font-semibold text-slate-700 mb-3">Bản đồ cơ thể</h2>
+                <p class="text-sm text-slate-500 mb-4">Chạm vào các điểm để xem chi tiết hoặc thêm lần quét mới tại vị trí tương ứng.</p>
+
+                <div class="minimal-card">
+                    <div class="body-map-placeholder">
+                        [Hình ảnh/SVG bản đồ cơ thể tương tác]
+                        </div>
+                     <div class="flex justify-center space-x-4 text-xs text-slate-600 mt-4">
+                         <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-green-500"></span><span>Thấp</span></div>
+                         <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span>Theo dõi</span></div>
+                         <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-red-500"></span><span>Cao</span></div>
+                    </div>
+                </div>
+
+                 <div class="minimal-card">
+                    <h3 class="text-lg font-semibold text-slate-700 mb-3">Lịch sử thay đổi</h3>
+                     <ul class="space-y-3">
+                        <li class="list-item">
+                            <p class="font-medium text-slate-800">Cánh tay trái (Nốt ruồi A)</p>
+                            <p class="text-sm text-slate-500">So sánh 02/04/25 & 15/01/25: <span class="text-amber-600">Thay đổi nhẹ màu sắc.</span></p>
+                            <a href="#" class="modern-secondary-button text-xs mt-1">Xem so sánh</a>
+                        </li>
+                        <li class="list-item">
+                             <p class="font-medium text-slate-800">Vùng Lưng (Điểm B)</p>
+                             <p class="text-sm text-slate-500">So sánh 02/04/25 & 15/01/25: <span class="text-green-600">Kích thước ổn định.</span></p>
+                             <a href="#" class="modern-secondary-button text-xs mt-1">Xem so sánh</a>
+                        </li>
+                    </ul>
+                 </div>
+            </div>
+
+            <div id="tab-scan" class="tab-content">
+                 <div class="flex flex-col items-center justify-center text-center pt-10">
+                    <span class="lucide text-blue-500 text-6xl mb-6 opacity-80">&#xe951;</span> <h2 class="text-2xl font-bold text-slate-800 mb-3">Sẵn sàng quét</h2>
+                    <p class="text-slate-500 mb-6 max-w-xs mx-auto">Đảm bảo đủ ánh sáng và giữ yên thiết bị trong quá trình quét.</p>
+
+                    <div class="w-full max-w-xs h-72 bg-slate-800 rounded-lg shadow-lg mb-6 flex items-center justify-center text-slate-400">
+                        (Khung Camera sẽ hiển thị ở đây)
+                    </div>
+
+                    <button class="modern-primary-button w-full max-w-xs">
+                        <span class="lucide">&#xe94f;</span> Bắt đầu quét
+                    </button>
+                </div>
+            </div>
+
+            <div id="tab-analysis" class="tab-content">
+                <h2 class="text-xl font-semibold text-slate-700 mb-3">Phân tích & Bệnh sử</h2>
+
+                 <div class="minimal-card bg-gradient-to-br from-indigo-50 to-purple-50 border-purple-200">
+                     <div class="card-header">
+                        <span class="lucide card-icon text-purple-600">&#xeb31;</span> Đánh giá nguy cơ cá nhân
+                    </div>
+                     <p class="text-base text-slate-700 mb-3">Các yếu tố chính ảnh hưởng đến nguy cơ của bạn:</p>
+                     <div class="space-y-2 text-sm">
+                         <div class="flex items-center justify-between p-2 bg-white/50 rounded">
+                             <span class="flex items-center"><i class="lucide text-red-500 w-4 h-4 mr-2">&#xf005;</i> Tiền sử gia đình</span>
+                             <span class="font-semibold text-red-600">Có (Mẹ)</span>
+                         </div>
+                         <div class="flex items-center justify-between p-2 bg-white/50 rounded">
+                             <span class="flex items-center"><i class="lucide text-orange-500 w-4 h-4 mr-2">&#xf073;</i> Tiếp xúc nắng</span>
+                             <span class="font-semibold text-orange-600">Cao</span>
+                         </div>
+                         <div class="flex items-center justify-between p-2 bg-white/50 rounded">
+                              <span class="flex items-center"><i class="lucide text-blue-500 w-4 h-4 mr-2">&#xea6b;</i> Loại da</span>
+                              <span class="font-semibold text-blue-600">Loại II</span>
+                         </div>
+                     </div>
+                     <button class="modern-secondary-button w-full mt-4 text-sm">
+                        <span class="lucide text-xs">&#xeed1;</span> Cập nhật thông tin
+                    </button>
+                </div>
+
+                 <div class="minimal-card">
+                     <div class="card-header">
+                        <span class="lucide card-icon text-slate-500">&#xe9f6;</span> Lịch sử chẩn đoán
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="list-item">
+                            <p class="font-medium text-slate-800">02/04/2025 - Cánh tay trái</p>
+                            <p class="text-sm text-green-600">Nguy cơ thấp</p>
+                            <a href="#" class="modern-secondary-button text-xs mt-1">Xem chi tiết</a>
+                        </li>
+                         <li class="list-item">
+                             <p class="font-medium text-slate-800">15/01/2025 - Vùng lưng</p>
+                             <p class="text-sm text-amber-600">Cần theo dõi</p>
+                             <a href="#" class="modern-secondary-button text-xs mt-1">Xem chi tiết</a>
+                        </li>
+                         <li class="list-item">
+                             <p class="font-medium text-slate-800">10/11/2024 - Cổ</p>
+                             <p class="text-sm text-slate-500">Bình thường</p>
+                            <a href="#" class="modern-secondary-button text-xs mt-1">Xem chi tiết</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="tab-connect" class="tab-content">
+                <h2 class="text-xl font-semibold text-slate-700 mb-3">Kết nối & Cộng đồng</h2>
+
+                <div class="minimal-card">
+                    <div class="card-header">
+                        <span class="lucide card-icon text-cyan-600">&#xeeb1;</span> Kết nối Bác sĩ
+                    </div>
+                    <p class="text-sm text-slate-500 mb-3">Tìm bác sĩ da liễu gần bạn hoặc nhận tư vấn trực tuyến nhanh chóng.</p>
+                     <div class="flex flex-col sm:flex-row gap-3">
+                         <button class="modern-primary-button flex-1">
+                            <span class="lucide text-base">&#xef2a;</span> Tìm Bác sĩ
+                        </button>
+                         <button class="modern-secondary-button flex-1 border-green-600 text-green-600 hover:bg-green-50">
+                            <span class="lucide text-base">&#xef7a;</span> Tư vấn Online
+                        </button>
+                     </div>
+                </div>
+
+                <div class="minimal-card">
+                    <div class="card-header">
+                        <span class="lucide card-icon text-indigo-600">&#xf005;</span> Cộng đồng DermaScan
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Tham gia diễn đàn để chia sẻ kinh nghiệm, đặt câu hỏi và đọc các bài viết hữu ích.</p>
+                    <div class="space-y-3 mb-4">
+                         <a href="#" class="block p-3 bg-slate-50 rounded-lg hover:bg-slate-100 border border-slate-200 transition-colors">
+                            <h4 class="font-semibold text-blue-700 text-sm">5 Dấu hiệu ung thư da không nên bỏ qua</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Bài viết nổi bật</p>
+                        </a>
+                         <a href="#" class="block p-3 bg-slate-50 rounded-lg hover:bg-slate-100 border border-slate-200 transition-colors">
+                             <h4 class="font-semibold text-blue-700 text-sm">Kinh nghiệm sử dụng kem chống nắng hiệu quả</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Thảo luận từ thành viên</p>
+                        </a>
+                    </div>
+                     <button class="modern-secondary-button w-full">
+                        <span class="lucide text-sm">&#xe9e3;</span> Truy cập diễn đàn
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        <nav class="app-nav px-2 py-1 flex justify-around items-center">
+            <button class="nav-button flex flex-col items-center active" data-tab="home">
+                <span class="lucide text-2xl">&#xe9f1;</span> <span class="text-xs mt-0.5">Trang chủ</span>
+            </button>
+            <button class="nav-button flex flex-col items-center" data-tab="map">
+                <span class="lucide text-2xl">&#xea13;</span> <span class="text-xs mt-0.5">Bản đồ</span>
+            </button>
+            <button class="nav-scan-button flex flex-col items-center text-white p-3 rounded-full w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 justify-center" data-tab="scan">
+                <span class="lucide text-3xl">&#xe951;</span> </button>
+            <button class="nav-button flex flex-col items-center" data-tab="analysis">
+                <span class="lucide text-2xl">&#xeed0;</span> <span class="text-xs mt-0.5">Phân tích</span>
+            </button>
+            <button class="nav-button flex flex-col items-center" data-tab="connect">
+                 <span class="lucide text-2xl">&#xf005;</span> <span class="text-xs mt-0.5">Kết nối</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        const navButtons = document.querySelectorAll('.app-nav button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const mainContentArea = document.querySelector('.app-main');
+        const pageTitle = document.getElementById('page-title');
+        const backButton = document.getElementById('back-button');
+        const headerActionButton = document.getElementById('header-action-button'); // Nút Filter/Settings...
+
+        // Tiêu đề và icon nút phải cho từng tab
+        const tabConfig = {
+            'home': { title: 'Tổng quan', actionIcon: '&#xef31;' }, // settings
+            'map': { title: 'Bản đồ cơ thể', actionIcon: '&#xef13;' }, // filter
+            'scan': { title: 'Quét ảnh', actionIcon: null }, // Không có nút action
+            'analysis': { title: 'Phân tích', actionIcon: '&#xeed1;' }, // file-cog
+            'connect': { title: 'Kết nối', actionIcon: null } // Không có nút action
+        };
+
+        function switchTab(tabId) {
+            if (!tabId) return; // Thoát nếu không có tabId
+
+             // Cập nhật trạng thái active cho nút nav
+            navButtons.forEach(btn => {
+                const btnTabId = btn.getAttribute('data-tab');
+                if (btnTabId === tabId) {
+                    btn.classList.add('active');
+                    // Xử lý riêng cho nút scan (không có text active)
+                    if(btn.classList.contains('nav-scan-button')) {
+                         btn.classList.add('ring-4', 'ring-blue-200/50'); // Thêm hiệu ứng ring khi active
+                    }
+                } else {
+                    btn.classList.remove('active');
+                     if(btn.classList.contains('nav-scan-button')) {
+                         btn.classList.remove('ring-4', 'ring-blue-200/50');
+                    }
+                }
+            });
+
+            // Ẩn tất cả nội dung tab và hiển thị tab được chọn
+            let foundTab = false;
+            tabContents.forEach(content => {
+                if (content.id === `tab-${tabId}`) {
+                    content.classList.add('active');
+                    foundTab = true;
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+
+            // Xử lý nếu không tìm thấy tab (có thể là lỗi)
+            if (!foundTab) {
+                console.warn(`Tab content not found for ID: tab-${tabId}`);
+                // Có thể hiển thị tab mặc định ở đây
+                // document.getElementById('tab-home').classList.add('active');
+                // document.querySelector('.nav-button[data-tab="home"]').classList.add('active');
+                // return; // Dừng xử lý tiếp
+            }
+
+
+            // Cuộn lên đầu trang
+            if (mainContentArea) {
+                mainContentArea.scrollTop = 0;
+            }
+
+            // Cập nhật tiêu đề và nút header
+            const config = tabConfig[tabId] || { title: 'DermaScan', actionIcon: null };
+            pageTitle.textContent = config.title;
+
+            // Hiện/ẩn nút Back (ví dụ: chỉ hiện khi không ở trang home)
+            // backButton.style.visibility = (tabId === 'home') ? 'hidden' : 'visible';
+
+            // Cập nhật icon nút action bên phải header
+             const actionIconElement = headerActionButton.querySelector('.lucide');
+             if (config.actionIcon && actionIconElement) {
+                 actionIconElement.innerHTML = config.actionIcon;
+                 headerActionButton.style.display = 'inline-flex'; // Hiện nút
+             } else {
+                 headerActionButton.style.display = 'none'; // Ẩn nút
+             }
+        }
+
+        // Gắn sự kiện click cho các nút nav
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        // Xử lý nút back (nếu cần logic phức tạp hơn)
+        // backButton.addEventListener('click', () => { /* Logic quay lại */ });
+
+        // Hiển thị tab mặc định khi tải trang
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab('home'); // Mặc định hiển thị tab 'home'
+        });
+
+        // (Tùy chọn) Thêm sự kiện cho các nút chuyển tab nội bộ
+        document.querySelectorAll('a[data-target-tab]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetTab = link.getAttribute('data-target-tab');
+                switchTab(targetTab);
+            });
+        });
+
+    </script>
+</body>
+</html>
