@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24883796-f139-480f-a641-ab9a9412b448" name="Changes" comment="" />
+    <list default="true" id="24883796-f139-480f-a641-ab9a9412b448" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Draft.html" beforeDir="false" afterPath="$PROJECT_DIR$/Draft.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Draft.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Draft.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Draft1.html" beforeDir="false" afterPath="$PROJECT_DIR$/Draft1.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,6 +34,9 @@
       </map>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -47,6 +55,8 @@
     &quot;Python.MOATACO_Image (1).executor&quot;: &quot;Run&quot;,
     &quot;Python.MOATACO_Matrix.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/OneDrive/OneDrive - Thuyloi University/Document_OneDrive/Dev Document/AI/data mining/Nhom1_64TTNT1/Code,model/KhaiPhaDuLieu2.ipynb&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -226,6 +236,9 @@
       <workItem from="1742866632567" duration="2931000" />
       <workItem from="1742956084674" duration="2393000" />
       <workItem from="1743211457580" duration="1312000" />
+      <workItem from="1744941030488" duration="2371000" />
+      <workItem from="1744982328538" duration="609000" />
+      <workItem from="1748883124501" duration="398000" />
     </task>
     <servers />
   </component>
