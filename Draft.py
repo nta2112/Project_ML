@@ -107,7 +107,7 @@ def predict_autoregressive(model, initial_context, prediction_steps, scaler, dev
 # Streamlit UI
 st.set_page_config(page_title="Stock Price Predictor", layout="wide")
 # st.title("📈 AI Stock Price Prediction (Strict Mode)")
-st.title("📈 AI Stock Price Prediction")
+st.title("📈 Lê Đoàn Dương AI Stock Price Prediction")
 
 # Sidebar controls
 with st.sidebar:
